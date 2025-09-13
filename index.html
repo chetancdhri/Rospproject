@@ -450,6 +450,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        font-weight: 600;
       }
 
       .carousel-rating {
@@ -533,7 +534,7 @@
         max-width: 1600px;
         margin: 0 auto;
         width: 100%;
-      }
+  }
 
       .section-title {
         width: 100%;
@@ -812,6 +813,8 @@
         width: 100%;
         height: 400px;
         margin-bottom: 1rem;
+        position: relative;
+        overflow: hidden;
       }
 
       .skeleton-text {
@@ -822,6 +825,30 @@
 
       .skeleton-text:last-child {
         width: 50%;
+      }
+
+      /* Poster Placeholder */
+      .poster-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .poster-placeholder i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--purple);
+      }
+
+      .poster-placeholder p {
+        font-size: 0.9rem;
       }
 
       /* Modal Styles */
@@ -978,6 +1005,7 @@
         flex-wrap: wrap;
         gap: 0.8rem;
         margin-top: 0.8rem;
+        max-width: 400px;
       }
 
       .genre {
@@ -1054,12 +1082,24 @@
         font-weight: 600;
         margin-top: 1rem;
         font-size: 1rem;
+        max-width: 120px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-left: auto;
+        margin-right: auto;
       }
 
       .cast-character {
         font-size: 0.9rem;
         color: var(--text-secondary);
         margin-top: 0.3rem;
+        max-width: 120px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-left: auto;
+        margin-right: auto;
       }
 
       /* Loading Animation */
@@ -1097,6 +1137,7 @@
         font-size: 4rem;
         margin-bottom: 1.5rem;
         color: var(--accent);
+        animation: pulse 2s infinite;
       }
 
       .error-message p {
@@ -1641,25 +1682,24 @@
     <!-- Genre Filters (Hidden by default) -->
     <div class="filters" id="genre-filters" style="display: none;">
       <select class="filter-select" id="genre-select">
-        <option value="28">Action</option>
-        <option value="12">Adventure</option>
-        <option value="16">Animation</option>
-        <option value="35">Comedy</option>
-        <option value="80">Crime</option>
-        <option value="99">Documentary</option>
-        <option value="18">Drama</option>
-        <option value="10751">Family</option>
-        <option value="14">Fantasy</option>
-        <option value="36">History</option>
-        <option value="27">Horror</option>
-        <option value="10402">Music</option>
-        <option value="9648">Mystery</option>
-        <option value="10749">Romance</option>
-        <option value="878">Science Fiction</option>
-        <option value="10770">TV Movie</option>
-        <option value="53">Thriller</option>
-        <option value="10752">War</option>
-        <option value="37">Western</option>
+        <option value="action">Action</option>
+        <option value="adventure">Adventure</option>
+        <option value="animation">Animation</option>
+        <option value="comedy">Comedy</option>
+        <option value="crime">Crime</option>
+        <option value="documentary">Documentary</option>
+        <option value="drama">Drama</option>
+        <option value="family">Family</option>
+        <option value="fantasy">Fantasy</option>
+        <option value="history">History</option>
+        <option value="horror">Horror</option>
+        <option value="music">Music</option>
+        <option value="mystery">Mystery</option>
+        <option value="romance">Romance</option>
+        <option value="sci-fi">Science Fiction</option>
+        <option value="thriller">Thriller</option>
+        <option value="war">War</option>
+        <option value="western">Western</option>
       </select>
       <button class="hero-cta" id="apply-genre" style="padding: 0.8rem 1.8rem;">
         <i class="fas fa-filter"></i>
@@ -1724,27 +1764,16 @@
 
     <footer class="footer">
       <p>
-        This product uses the TMDB API but is not endorsed or certified by TMDB.
+        This product uses the OMDb API but is not endorsed or certified by OMDb.
       </p>
     </footer>
 
     <script>
       // API configuration
-      const API_KEY = '3fd2be6f0c70a2a598f084ddfb75487c'; // Replace with your TMDB API key
-      const API_URL = 'https://api.themoviedb.org/3';
-      const IMG_PATH = 'https://image.tmdb.org/t/p/w200'; // Smaller image size for suggestions
-      const IMG_PATH_LARGE = 'https://image.tmdb.org/t/p/w500'; // Larger image size for main content
-      const SEARCH_API = `${API_URL}/search/movie?api_key=${API_KEY}&query=`;
-      const SEARCH_SUGGESTIONS_API = `${API_URL}/search/movie?api_key=${API_KEY}&query=`;
-
-      const API_URLS = {
-        popular: `${API_URL}/movie/popular?api_key=${API_KEY}`,
-        now_playing: `${API_URL}/movie/now_playing?api_key=${API_KEY}`,
-        upcoming: `${API_URL}/movie/upcoming?api_key=${API_KEY}`,
-        top_rated: `${API_URL}/movie/top_rated?api_key=${API_KEY}`,
-        trending: `${API_URL}/trending/movie/week?api_key=${API_KEY}`,
-        genre: `${API_URL}/discover/movie?api_key=${API_KEY}&with_genres=`
-      };
+      const API_KEY = '93562e5e';
+      const API_URL = 'https://www.omdbapi.com/';
+      const POSTER_URL = 'https://img.omdbapi.com/';
+      const IMG_PATH = 'https://img.omdbapi.com/?apikey=93562e5e&'; // For poster images
 
       // DOM elements
       const main = document.getElementById('main');
@@ -1777,29 +1806,6 @@
       let searchDebounceTimer;
       let suggestionDebounceTimer;
       let lastSearchTerm = '';
-
-      // Genre mapping
-      const genreMap = {
-        28: 'Action',
-        12: 'Adventure',
-        16: 'Animation',
-        35: 'Comedy',
-        80: 'Crime',
-        99: 'Documentary',
-        18: 'Drama',
-        10751: 'Family',
-        14: 'Fantasy',
-        36: 'History',
-        27: 'Horror',
-        10402: 'Music',
-        9648: 'Mystery',
-        10749: 'Romance',
-        878: 'Science Fiction',
-        10770: 'TV Movie',
-        53: 'Thriller',
-        10752: 'War',
-        37: 'Western'
-      };
 
       // Initialize the app
       document.addEventListener('DOMContentLoaded', () => {
@@ -1943,14 +1949,25 @@
       // Get featured movies for carousel
       async function getFeaturedMovies() {
         try {
-          const response = await fetch(`${API_URL}/movie/popular?api_key=${API_KEY}`);
+          // OMDb API doesn't have a "popular" endpoint, so we'll search for popular movies
+          const response = await fetch(`${API_URL}?apikey=${API_KEY}&s=movie&type=movie&page=1`);
           
           if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
           }
           
           const data = await response.json();
-          displayFeaturedMovies(data.results.slice(0, 10)); // Show top 10 results
+          if (data.Response === 'True') {
+            // Get details for each movie to have more data
+            const movieDetails = await Promise.all(
+              data.Search.slice(0, 10).map(movie => 
+                fetch(`${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`).then(res => res.json())
+              )
+            );
+            displayFeaturedMovies(movieDetails);
+          } else {
+            throw new Error(data.Error || 'Failed to fetch featured movies');
+          }
           
         } catch (error) {
           console.error('Error fetching featured movies:', error);
@@ -1962,24 +1979,27 @@
         featuredCarousel.innerHTML = '';
         
         movies.forEach(movie => {
-          const { title, poster_path, vote_average } = movie;
+          const { Title, imdbRating } = movie;
           
           const carouselItem = document.createElement('div');
           carouselItem.className = 'carousel-item';
           
-          const voteClass = getVoteClass(vote_average);
+          const voteClass = getVoteClass(imdbRating);
           
           carouselItem.innerHTML = `
-            <img 
-              src="${poster_path ? IMG_PATH_LARGE + poster_path : 'https://via.placeholder.com/300x450/1a1a2e/eee?text=No+Poster'}" 
-              alt="${title} movie poster" 
-              onerror="this.src='https://via.placeholder.com/300x450/1a1a2e/eee?text=Poster+Not+Found'"
-            />
+            <div class="poster-container" data-imdbid="${movie.imdbID}">
+              <div class="skeleton skeleton-poster"></div>
+            </div>
             <div class="carousel-info">
-              <h3>${title}</h3>
-              <span class="carousel-rating ${voteClass}">${vote_average.toFixed(1)}</span>
+              <h3>${Title}</h3>
+              ${imdbRating && imdbRating !== 'N/A' ? 
+                `<span class="carousel-rating ${voteClass}">${imdbRating}</span>` : 
+                ''}
             </div>
           `;
+          
+          // Load poster with fallback
+          loadPosterWithFallback(movie, carouselItem.querySelector('.poster-container'));
           
           carouselItem.addEventListener('click', () => {
             showMovieDetails(movie);
@@ -2000,14 +2020,18 @@
           searchLoading.classList.add('active');
           lastSearchTerm = query;
           
-          const response = await fetch(`${SEARCH_SUGGESTIONS_API}${encodeURIComponent(query)}`);
+          const response = await fetch(`${API_URL}?apikey=${API_KEY}&s=${encodeURIComponent(query)}&type=movie`);
           
           if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
           }
           
           const data = await response.json();
-          displaySearchSuggestions(data.results.slice(0, 5)); // Show top 5 results
+          if (data.Response === 'True') {
+            displaySearchSuggestions(data.Search.slice(0, 5)); // Show top 5 results
+          } else {
+            hideSuggestions();
+          }
           
         } catch (error) {
           console.error('Error fetching search suggestions:', error);
@@ -2031,34 +2055,35 @@
           suggestionItem.className = 'suggestion-item';
           suggestionItem.tabIndex = 0;
           
-          const year = movie.release_date ? movie.release_date.substring(0, 4) : 'N/A';
+          const year = movie.Year && movie.Year !== 'N/A' ? movie.Year : 'N/A';
           
           suggestionItem.innerHTML = `
-            <img 
-              src="${movie.poster_path ? IMG_PATH + movie.poster_path : 'https://via.placeholder.com/40x60/1a1a2e/eee?text=No+Poster'}" 
-              alt="${movie.title}"
-              onerror="this.src='https://via.placeholder.com/40x60/1a1a2e/eee?text=No+Poster'"
-            />
+            <div class="suggestion-poster" data-imdbid="${movie.imdbID}">
+              <div class="skeleton" style="width: 40px; height: 60px; border-radius: 6px;"></div>
+            </div>
             <div class="suggestion-info">
-              <div class="suggestion-title">${movie.title}</div>
+              <div class="suggestion-title">${movie.Title}</div>
               <div class="suggestion-year">${year}</div>
             </div>
           `;
           
+          // Load poster with fallback
+          loadPosterWithFallback(movie, suggestionItem.querySelector('.suggestion-poster'), true);
+          
           suggestionItem.addEventListener('click', () => {
-            searchInput.value = movie.title;
-            currentSearchTerm = movie.title;
+            searchInput.value = movie.Title;
+            currentSearchTerm = movie.Title;
             hideSuggestions();
-            searchMovies(movie.title, 1);
+            searchMovies(movie.Title, 1);
           });
           
           // Keyboard navigation
           suggestionItem.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-              searchInput.value = movie.title;
-              currentSearchTerm = movie.title;
+              searchInput.value = movie.Title;
+              currentSearchTerm = movie.Title;
               hideSuggestions();
-              searchMovies(movie.title, 1);
+              searchMovies(movie.Title, 1);
             } else if (e.key === 'ArrowDown') {
               e.preventDefault();
               const next = suggestionItem.nextElementSibling || searchSuggestions.firstElementChild;
@@ -2092,19 +2117,50 @@
           showLoading();
           currentPage = page;
           
-          const response = await fetch(`${API_URLS[category]}&page=${page}`);
+          let searchQuery = '';
+          switch(category) {
+            case 'popular':
+              searchQuery = 'movie';
+              break;
+            case 'now_playing':
+              searchQuery = 'new';
+              break;
+            case 'upcoming':
+              searchQuery = 'upcoming';
+              break;
+            case 'top_rated':
+              searchQuery = 'best';
+              break;
+            case 'trending':
+              searchQuery = 'trending';
+              break;
+            default:
+              searchQuery = 'movie';
+          }
+          
+          const response = await fetch(`${API_URL}?apikey=${API_KEY}&s=${searchQuery}&type=movie&page=${page}`);
           
           if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
           }
           
           const data = await response.json();
-          movies = data.results;
-          totalPages = data.total_pages > 500 ? 500 : data.total_pages; // TMDB limits pages to 500
-          
-          displayMovies(movies);
-          updatePagination();
-          updateSectionTitle(category);
+          if (data.Response === 'True') {
+            // Get details for each movie to have more data
+            const movieDetails = await Promise.all(
+              data.Search.map(movie => 
+                fetch(`${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`).then(res => res.json())
+              )
+            );
+            movies = movieDetails;
+            totalPages = Math.ceil(data.totalResults / 10);
+            
+            displayMovies(movies);
+            updatePagination();
+            updateSectionTitle(category);
+          } else {
+            throw new Error(data.Error || 'Failed to fetch movies');
+          }
           
         } catch (error) {
           console.error('Error fetching movies:', error);
@@ -2113,24 +2169,34 @@
       }
 
       // Get movies by genre
-      async function getMoviesByGenre(genreId, page = 1) {
+      async function getMoviesByGenre(genre, page = 1) {
         try {
           showLoading();
           currentPage = page;
           
-          const response = await fetch(`${API_URLS.genre}${genreId}&page=${page}`);
+          const response = await fetch(`${API_URL}?apikey=${API_KEY}&s=${genre}&type=movie&page=${page}`);
           
           if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
           }
           
           const data = await response.json();
-          movies = data.results;
-          totalPages = data.total_pages > 500 ? 500 : data.total_pages;
-          
-          displayMovies(movies);
-          updatePagination();
-          updateSectionTitle('genre', genreMap[genreId]);
+          if (data.Response === 'True') {
+            // Get details for each movie to have more data
+            const movieDetails = await Promise.all(
+              data.Search.map(movie => 
+                fetch(`${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`).then(res => res.json())
+              )
+            );
+            movies = movieDetails;
+            totalPages = Math.ceil(data.totalResults / 10);
+            
+            displayMovies(movies);
+            updatePagination();
+            updateSectionTitle('genre', genre);
+          } else {
+            throw new Error(data.Error || 'Failed to fetch movies by genre');
+          }
           
         } catch (error) {
           console.error('Error fetching movies by genre:', error);
@@ -2145,22 +2211,32 @@
           currentPage = page;
           hideSuggestions();
           
-          const response = await fetch(`${SEARCH_API}${encodeURIComponent(query)}&page=${page}`);
+          const response = await fetch(`${API_URL}?apikey=${API_KEY}&s=${encodeURIComponent(query)}&type=movie&page=${page}`);
           
           if (!response.ok) {
             throw new Error(`API error: ${response.status}`);
           }
           
           const data = await response.json();
-          movies = data.results;
-          totalPages = data.total_pages > 500 ? 500 : data.total_pages;
-          
-          if (movies.length === 0) {
-            showNoResults(query);
+          if (data.Response === 'True') {
+            // Get details for each movie to have more data
+            const movieDetails = await Promise.all(
+              data.Search.map(movie => 
+                fetch(`${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`).then(res => res.json())
+              )
+            );
+            movies = movieDetails;
+            totalPages = Math.ceil(data.totalResults / 10);
+            
+            if (movies.length === 0) {
+              showNoResults(query);
+            } else {
+              displayMovies(movies);
+              updatePagination();
+              updateSectionTitle('search', query);
+            }
           } else {
-            displayMovies(movies);
-            updatePagination();
-            updateSectionTitle('search', query);
+            showNoResults(query);
           }
           
         } catch (error) {
@@ -2181,34 +2257,36 @@
 
       // Create a movie card element
       function createMovieCard(movie, index) {
-        const { title, poster_path, vote_average, release_date, overview, popularity, vote_count } = movie;
+        const { Title, imdbRating, Year, Plot, imdbID } = movie;
         
         const card = document.createElement('div');
         card.className = 'movie-card';
         card.style.animationDelay = `${index * 0.1}s`;
-        card.setAttribute('aria-label', `${title} movie card`);
+        card.setAttribute('aria-label', `${Title} movie card`);
         
-        const voteClass = getVoteClass(vote_average);
-        const year = release_date ? release_date.substring(0, 4) : 'N/A';
-        const shortOverview = overview ? overview.substring(0, 150) + '...' : 'No overview available.';
+        const voteClass = getVoteClass(imdbRating);
+        const shortOverview = Plot && Plot !== 'N/A' ? Plot.substring(0, 150) + '...' : 'No overview available.';
         
         card.innerHTML = `
-          ${popularity > 1000 ? '<div class="trending-badge">Trending</div>' : ''}
-          ${vote_count > 5000 ? '<div class="award-badge">Award Winner</div>' : ''}
-          <img 
-            src="${poster_path ? IMG_PATH_LARGE + poster_path : 'https://via.placeholder.com/300x450/1a1a2e/eee?text=No+Poster'}" 
-            alt="${title} movie poster" 
-            onerror="this.src='https://via.placeholder.com/300x450/1a1a2e/eee?text=Poster+Not+Found'"
-          />
+          ${imdbRating && parseFloat(imdbRating) > 8 ? '<div class="trending-badge">Trending</div>' : ''}
+          ${imdbRating && parseFloat(imdbRating) > 8.5 ? '<div class="award-badge">Award Winner</div>' : ''}
+          <div class="poster-container" data-imdbid="${imdbID}">
+            <div class="skeleton skeleton-poster"></div>
+          </div>
           <div class="movie-info">
-            <h3>${title}</h3>
-            <span class="${voteClass}">${vote_average.toFixed(1)}</span>
+            <h3>${Title}</h3>
+            ${imdbRating && imdbRating !== 'N/A' ? 
+              `<span class="${voteClass}">${imdbRating}</span>` : 
+              '<span>N/A</span>'}
           </div>
           <div class="overview">
-            <h4>${title} (${year})</h4>
+            <h4>${Title} (${Year})</h4>
             <p>${shortOverview}</p>
           </div>
         `;
+        
+        // Load poster with fallback
+        loadPosterWithFallback(movie, card.querySelector('.poster-container'));
         
         card.addEventListener('click', () => {
           showMovieDetails(movie);
@@ -2217,164 +2295,190 @@
         return card;
       }
 
+      // Load poster with fallback for missing images
+      function loadPosterWithFallback(movie, container, isSuggestion = false) {
+        const { Poster, Title, imdbID } = movie;
+        const posterUrl = Poster && Poster !== 'N/A' ? Poster : '';
+        
+        if (!posterUrl) {
+          showPosterPlaceholder(container, Title, isSuggestion);
+          return;
+        }
+        
+        const img = new Image();
+        
+        img.onload = function() {
+          // Remove skeleton loading
+          const skeleton = container.querySelector('.skeleton');
+          if (skeleton) {
+            skeleton.remove();
+          }
+          
+          // Create and append the image
+          const imgElement = document.createElement('img');
+          imgElement.src = posterUrl;
+          imgElement.alt = `${Title} movie poster`;
+          imgElement.style.width = '100%';
+          imgElement.style.height = isSuggestion ? '60px' : '400px';
+          imgElement.style.objectFit = 'cover';
+          if (!isSuggestion) {
+            imgElement.style.transition = 'transform 0.5s ease';
+          }
+          
+          container.appendChild(imgElement);
+        };
+        
+        img.onerror = function() {
+          showPosterPlaceholder(container, Title, isSuggestion);
+        };
+        
+        img.src = posterUrl;
+        
+        // Set timeout to handle cases where image doesn't load or load event doesn't fire
+        setTimeout(() => {
+          if (!container.querySelector('img') && !container.querySelector('.poster-placeholder')) {
+            showPosterPlaceholder(container, Title, isSuggestion);
+          }
+        }, 3000);
+      }
+
+      // Show poster placeholder when image is not available
+      function showPosterPlaceholder(container, title, isSuggestion = false) {
+        // Remove skeleton loading
+        const skeleton = container.querySelector('.skeleton');
+        if (skeleton) {
+          skeleton.remove();
+        }
+        
+        // Create placeholder
+        const placeholder = document.createElement('div');
+        placeholder.className = 'poster-placeholder';
+        placeholder.style.width = '100%';
+        placeholder.style.height = isSuggestion ? '60px' : '400px';
+        placeholder.innerHTML = `
+          <i class="fas fa-film"></i>
+          <p>${title.substring(0, 15)}${title.length > 15 ? '...' : ''}</p>
+        `;
+        
+        container.appendChild(placeholder);
+      }
+
       // Show movie details in modal
       async function showMovieDetails(movie) {
         try {
           // Fetch additional movie details
-          const [movieResponse, creditsResponse, similarResponse, providersResponse] = await Promise.all([
-            fetch(`${API_URL}/movie/${movie.id}?api_key=${API_KEY}`),
-            fetch(`${API_URL}/movie/${movie.id}/credits?api_key=${API_KEY}`),
-            fetch(`${API_URL}/movie/${movie.id}/similar?api_key=${API_KEY}`),
-            fetch(`${API_URL}/movie/${movie.id}/watch/providers?api_key=${API_KEY}`)
-          ]);
+          const response = await fetch(`${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}&plot=full`);
           
-          if (!movieResponse.ok) {
+          if (!response.ok) {
             throw new Error('Failed to fetch movie details');
           }
           
-          const movieDetails = await movieResponse.json();
-          const credits = await creditsResponse.json();
-          const similarMovies = await similarResponse.json();
-          const providers = await providersResponse.json();
+          const movieDetails = await response.json();
           
-          const { title, poster_path, vote_average, release_date, overview, genres, runtime, budget, revenue, status, production_companies } = movieDetails;
+          if (movieDetails.Response !== 'True') {
+            throw new Error('Movie details not found');
+          }
           
-          modalTitle.textContent = title;
+          const { Title, Poster, imdbRating, Released, Plot, Genre, Runtime, BoxOffice, imdbVotes, Director, Actors, Writer, Awards, Ratings } = movieDetails;
           
-          const voteClass = getVoteClass(vote_average);
-          const year = release_date ? release_date.substring(0, 4) : 'N/A';
-          const hours = Math.floor(runtime / 60);
-          const minutes = runtime % 60;
-          const runtimeFormatted = runtime ? `${hours}h ${minutes}m` : 'N/A';
-          const budgetFormatted = budget ? `$${budget.toLocaleString()}` : 'N/A';
-          const revenueFormatted = revenue ? `$${revenue.toLocaleString()}` : 'N/A';
+          modalTitle.textContent = Title;
           
-          // Get top 10 cast members
-          const topCast = credits.cast.slice(0, 10);
-          
-          // Get directors
-          const directors = credits.crew.filter(person => person.job === 'Director');
-          
-          // Get watch providers (US region)
-          const usProviders = providers.results?.US;
+          const voteClass = getVoteClass(imdbRating);
+          const year = Released && Released !== 'N/A' ? Released.substring(0, 4) : 'N/A';
           
           modalBody.innerHTML = `
-            <div class="modal-poster">
-              <img 
-                src="${poster_path ? IMG_PATH_LARGE + poster_path : 'https://via.placeholder.com/300x450/1a1a2e/eee?text=No+Poster'}" 
-                alt="${title} movie poster"
-                onerror="this.src='https://via.placeholder.com/300x450/1a1a2e/eee?text=Poster+Not+Found'"
-              />
+            <div class="modal-poster" id="modal-poster">
+              <div class="skeleton" style="width: 100%; height: 500px;"></div>
             </div>
             <div class="modal-details">
               <div class="detail-item">
                 <h4>Release Date</h4>
-                <p>${release_date ? new Date(release_date).toLocaleDateString() : 'Unknown'}</p>
+                <p>${Released && Released !== 'N/A' ? Released : 'Unknown'}</p>
               </div>
               <div class="detail-item">
                 <h4>Rating</h4>
-                <p><span class="${voteClass}">${vote_average.toFixed(1)}</span>/10</p>
+                <p>${imdbRating && imdbRating !== 'N/A' ? 
+                  `<span class="${voteClass}">${imdbRating}</span>/10 (${imdbVotes} votes)` : 
+                  'N/A'}</p>
               </div>
               <div class="detail-item">
                 <h4>Runtime</h4>
-                <p>${runtimeFormatted}</p>
+                <p>${Runtime && Runtime !== 'N/A' ? Runtime : 'N/A'}</p>
               </div>
               <div class="detail-item">
-                <h4>Budget / Revenue</h4>
-                <p>${budgetFormatted} / ${revenueFormatted}</p>
+                <h4>Box Office</h4>
+                <p>${BoxOffice && BoxOffice !== 'N/A' ? BoxOffice : 'N/A'}</p>
               </div>
               <div class="detail-item">
                 <h4>Genres</h4>
                 <div class="genre-list">
-                  ${genres.map(genre => `<span class="genre">${genre.name}</span>`).join('')}
+                  ${Genre && Genre !== 'N/A' ? 
+                    Genre.split(', ').map(genre => `<span class="genre">${genre}</span>`).join('') : 
+                    '<span>N/A</span>'}
                 </div>
               </div>
               <div class="detail-item">
-                <h4>Status</h4>
-                <p>${status}</p>
+                <h4>Awards</h4>
+                <p>${Awards && Awards !== 'N/A' ? Awards : 'N/A'}</p>
               </div>
               <div class="detail-item">
                 <h4>Directed By</h4>
-                <p>${directors.length > 0 ? directors.map(d => d.name).join(', ') : 'N/A'}</p>
+                <p>${Director && Director !== 'N/A' ? Director : 'N/A'}</p>
+              </div>
+              <div class="detail-item">
+                <h4>Starring</h4>
+                <p>${Actors && Actors !== 'N/A' ? Actors : 'N/A'}</p>
+              </div>
+              <div class="detail-item">
+                <h4>Written By</h4>
+                <p>${Writer && Writer !== 'N/A' ? Writer : 'N/A'}</p>
               </div>
               <div class="detail-item">
                 <h4>Overview</h4>
-                <p>${overview || 'No overview available.'}</p>
+                <p>${Plot && Plot !== 'N/A' ? Plot : 'No overview available.'}</p>
               </div>
               
-              ${topCast.length > 0 ? `
-              <div class="detail-item cast-crew">
-                <h4>Top Cast</h4>
-                <div class="cast-grid">
-                  ${topCast.map(person => `
-                    <div class="cast-member">
-                      <img class="cast-photo" src="${person.profile_path ? IMG_PATH_LARGE + person.profile_path : 'https://via.placeholder.com/100x100/1a1a2e/eee?text=No+Image'}" alt="${person.name}" onerror="this.src='https://via.placeholder.com/100x100/1a1a2e/eee?text=No+Image'">
-                      <div class="cast-name">${person.name}</div>
-                      <div class="cast-character">${person.character}</div>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-              ` : ''}
-              
-              ${usProviders && (usProviders.flatrate || usProviders.buy || usProviders.rent) ? `
-              <div class="detail-item watch-providers">
-                <h4>Where to Watch</h4>
-                <div class="providers-list">
-                  ${usProviders.flatrate ? usProviders.flatrate.map(provider => `
-                    <div class="provider">
-                      <img class="provider-logo" src="${IMG_PATH_LARGE + provider.logo_path}" alt="${provider.provider_name}">
-                      <div class="provider-name">Stream</div>
-                    </div>
-                  `).join('') : ''}
-                  
-                  ${usProviders.buy ? usProviders.buy.map(provider => `
-                    <div class="provider">
-                      <img class="provider-logo" src="${IMG_PATH_LARGE + provider.logo_path}" alt="${provider.provider_name}">
-                      <div class="provider-name">Buy</div>
-                    </div>
-                  `).join('') : ''}
-                  
-                  ${usProviders.rent ? usProviders.rent.map(provider => `
-                    <div class="provider">
-                      <img class="provider-logo" src="${IMG_PATH_LARGE + provider.logo_path}" alt="${provider.provider_name}">
-                      <div class="provider-name">Rent</div>
-                    </div>
-                  `).join('') : ''}
-                </div>
-              </div>
-              ` : ''}
-              
-              ${similarMovies.results && similarMovies.results.length > 0 ? `
-              <div class="detail-item similar-movies">
-                <h4>Similar Movies</h4>
-                <div class="similar-grid">
-                  ${similarMovies.results.slice(0, 10).map(movie => `
-                    <div class="similar-movie" data-id="${movie.id}">
-                      <img src="${movie.poster_path ? IMG_PATH_LARGE + movie.poster_path : 'https://via.placeholder.com/150x225/1a1a2e/eee?text=No+Poster'}" alt="${movie.title}">
-                      <div class="similar-title">${movie.title}</div>
-                    </div>
-                  `).join('')}
-                </div>
+              ${Ratings && Ratings.length > 0 ? `
+              <div class="detail-item">
+                <h4>Ratings</h4>
+                ${Ratings.map(rating => `
+                  <p>${rating.Source}: ${rating.Value}</p>
+                `).join('')}
               </div>
               ` : ''}
             </div>
           `;
           
-          // Add event listeners to similar movies
-          const similarMovieElements = modalBody.querySelectorAll('.similar-movie');
-          similarMovieElements.forEach(element => {
-            element.addEventListener('click', () => {
-              const movieId = element.getAttribute('data-id');
-              const similarMovie = similarMovies.results.find(m => m.id === parseInt(movieId));
-              if (similarMovie) {
-                closeMovieModal();
-                setTimeout(() => {
-                  showMovieDetails(similarMovie);
-                }, 300);
+          // Load poster with fallback for modal
+          const modalPosterContainer = document.getElementById('modal-poster');
+          if (Poster && Poster !== 'N/A') {
+            const img = new Image();
+            
+            img.onload = function() {
+              // Remove skeleton loading
+              const skeleton = modalPosterContainer.querySelector('.skeleton');
+              if (skeleton) {
+                skeleton.remove();
               }
-            });
-          });
+              
+              // Create and append the image
+              const imgElement = document.createElement('img');
+              imgElement.src = Poster;
+              imgElement.alt = `${Title} movie poster`;
+              imgElement.style.width = '100%';
+              imgElement.style.display = 'block';
+              
+              modalPosterContainer.appendChild(imgElement);
+            };
+            
+            img.onerror = function() {
+              showModalPosterPlaceholder(modalPosterContainer, Title);
+            };
+            
+            img.src = Poster;
+          } else {
+            showModalPosterPlaceholder(modalPosterContainer, Title);
+          }
           
           modal.classList.add('active');
           document.body.style.overflow = 'hidden';
@@ -2383,6 +2487,28 @@
           console.error('Error fetching movie details:', error);
           showToast('Failed to load movie details', 'error');
         }
+      }
+
+      // Show modal poster placeholder
+      function showModalPosterPlaceholder(container, title) {
+        // Remove skeleton loading
+        const skeleton = container.querySelector('.skeleton');
+        if (skeleton) {
+          skeleton.remove();
+        }
+        
+        // Create placeholder
+        const placeholder = document.createElement('div');
+        placeholder.className = 'poster-placeholder';
+        placeholder.style.width = '100%';
+        placeholder.style.height = '500px';
+        placeholder.innerHTML = `
+          <i class="fas fa-film" style="font-size: 4rem;"></i>
+          <p>${title}</p>
+          <p style="font-size: 0.8rem; margin-top: 1rem;">Poster not available</p>
+        `;
+        
+        container.appendChild(placeholder);
       }
 
       // Close movie modal
@@ -2480,7 +2606,7 @@
             title = 'Trending This Week';
             break;
           case 'genre':
-            title = `${extra} Movies`;
+            title = `${extra.charAt(0).toUpperCase() + extra.slice(1)} Movies`;
             break;
           case 'search':
             title = `Search Results for "${extra}"`;
@@ -2570,9 +2696,12 @@
 
       // Helper function to get vote rating class
       function getVoteClass(vote) {
-        if (vote >= 8) return 'gold';
-        if (vote >= 7) return 'green';
-        if (vote >= 5) return 'orange';
+        if (!vote || vote === 'N/A') return 'red';
+        
+        const numericVote = parseFloat(vote);
+        if (numericVote >= 8) return 'gold';
+        if (numericVote >= 7) return 'green';
+        if (numericVote >= 5) return 'orange';
         return 'red';
       }
     </script>
